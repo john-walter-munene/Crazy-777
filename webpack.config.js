@@ -6,7 +6,7 @@ module.exports = {
     mode: 'development',
     entry: {
         // Main files.
-        index: './src/index.js',
+        index: './src/players.js',
 
         // Console Application.
         // projectsBoard: './src/backend/projectsBoard.js',
