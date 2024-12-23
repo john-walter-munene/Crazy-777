@@ -1,4 +1,10 @@
-import { topUpPlayerStake } from "./utility";
+import { format } from "date-fns";
+
+import { 
+    topUpPlayerStake, 
+    makeWithdrawal,
+    getLastBetID,
+} from "./utility";
 
 class Player {
     constructor(id = null, username = null, sessionToken = null, balance = 0, isActive = false, sessionStart = null) {
@@ -17,14 +23,32 @@ class Player {
         this.sessionToken = authData.token;
         this.balance = authData.balance;
         this.isActive = true;
-        this.sessionStart = new Date(); // Set the session start time
+        this.sessionStart = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
     }
 
-    topUpAccount(amount) {
-        this.balance = topUpPlayerStake(amount);
+    topUpAccount(topUpAmount) {
+        this.balance = topUpPlayerStake(topUpAmount);
     }
 
-    historyTracker() {
+    withdrawFromAccount(withdrawalAmount) {
+        this.balance = makeWithdrawal(withdrawalAmount);
+    }
+
+    betTracker(betAmount, results, reward, currentBalance) {
+        // Generate unique compunding IDs for each bet.
+        let betId = getLastBetID(this.id);
+
+        return {
+            betId,
+            betAmount,
+            results,
+            reward,
+            currentBalance,
+            timeStamp: format(new Date(projectOnEdit.startDate), 'yyyy-MM-dd HH:mm:ss'),
+        }
+    }
+
+    historyTracker(betTrackerResults) {
         // Use a map or set to track player history on new instances
         // Sync updates on game with DB.
     }
@@ -52,4 +76,4 @@ function authenticatePlayer(authData) {
 const player = authenticatePlayer({ username: "test", password: "1234" });
 console.log(player);
 
-export { player };
+export { player, authenticatePlayer };
