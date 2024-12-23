@@ -1,5 +1,5 @@
-import { checkPlayerCredentials } from "./utility";
-import { player } from "./players";
+import { player, authenticatePlayer } from "./players";
+import { checkPlayerCredentials, createPlayerAccount } from "./utility";
 
 // Create a single game instance.
 const slotMachineGame = (function slotMachine() {
@@ -14,14 +14,6 @@ const slotMachineGame = (function slotMachine() {
     // Slot machine sysmbols
     const symbolIcons = ['🍒', '🍋', '🍊', '🍉', '🎰', '💎', '💰', '🔔', '⭐', '7'];
 
-    const gameSymbols = symbolIcons.map((icon, index) => {
-        return {
-            id: index + 1, // Unique IDs, starting from 1
-            icon: icon, // Emoji symbol
-            name: getSymbolName(icon), // Assign a name based on emoji.
-        };
-    });   
-    
     const getSymbolName = (icon) => {
         const names = {
             '🍒': 'Cherry',
@@ -39,6 +31,14 @@ const slotMachineGame = (function slotMachine() {
         return names[icon];
     }
 
+    const gameSymbols = symbolIcons.map((icon, index) => {
+        return {
+            id: index + 1, // Unique IDs, starting from 1
+            icon: icon, // Emoji symbol
+            name: getSymbolName(icon), // Assign a name based on emoji.
+        };
+    });   
+    
     // Symbol Pools for each reel
     const symbolPools = {
         symbolPoolOne: [],
@@ -123,6 +123,7 @@ const slotMachineGame = (function slotMachine() {
         ]);
     
         console.log(`All reels stopped! Final Results: ${results.join(' | ')}`);
+        console.log(results);
         return results; // You can use this for further processing
     };   
     
@@ -150,6 +151,14 @@ const slotMachineGame = (function slotMachine() {
         } 
     }
 
+    const topUpPlayerAccount = (player, topUpAmount) => {
+        player.topUpAccount(topUpAmount);
+    }
+
+    const withdrawFromPlayerAccount = (player, withdrawalAmount) => {
+        player.withdrawFromAccount(withdrawalAmount);
+    }
+
     const getRoundRewards = (results, playAmount) => {
         const [reel1, reel2, reel3] = results;
         // Award logic here...
@@ -157,6 +166,7 @@ const slotMachineGame = (function slotMachine() {
 
     // Running a game round.
     const runGameRound = async (player, playAmount) => {
+        console.log("Running game round");
         // Step 1: Validate player's status and place a bet.
         if (!canPlay(player)) {
             console.log("Player cannot play. Please check credentials or balance.");
@@ -185,7 +195,24 @@ const slotMachineGame = (function slotMachine() {
         console.log(`Updated balance: ${player.balance}`);
     };
 
+    const getplayerHistory = (player) => {
+
+    }
+
+    const createNewPlayerAccount = (playerDetails) => {
+        let authData = createPlayerAccount(playerDetails);
+        let newPlayerInstance = authenticatePlayer(authData);
+        console.log(`New player account created. Proceed to play as you've been signed in automatically`);
+
+    }
+
     return {
         runGameRound,
+        getplayerHistory,
+        topUpPlayerAccount,
+        withdrawFromPlayerAccount,
+        createNewPlayerAccount,
     }
 })();
+
+export { slotMachineGame };

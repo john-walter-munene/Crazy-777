@@ -21,10 +21,41 @@ function checkPlayerCredentials(player, dbData = testData) {
 }
 
 // Mock player balance topups
-function topUpPlayerStake(player, amount) {
-    let newBalance = player.balance + amount;
+function topUpPlayerStake(player, topUpAmount) {
+    let newBalance = player.balance + topUpAmount;
     console.log(`Successful top up, new balance is ${newBalance}`)
     return newBalance;
 }
 
-export { checkPlayerCredentials, topUpPlayerStake };
+// Mock player withdrawals.
+function makeWithdrawal(player, withdrawalAmount) {
+    if (withdrawalAmount < 20) throw new Error("Can't withdraw less than $20");
+    let newBalance = player.balance - withdrawalAmount;
+    console.log(`Succesful withdrawal, new balance is ${newBalance}`);
+    return newBalance;
+
+}
+
+function getLastBetID(playerID) {
+    // Simulated response from backend API.
+    const response = {
+        id: "player123",
+        username: "CrazyGamer",
+        LastBetID: 0,
+    }
+
+    return response[LastBetID];
+}
+
+function createPlayerAccount(playerDetails) {
+    // Simulated response from Authentication API.
+    const authData = newPlayerInDatabase(playerDetails);
+    return authData;
+}
+export { 
+    checkPlayerCredentials, 
+    topUpPlayerStake,
+    makeWithdrawal,
+    getLastBetID,
+    createPlayerAccount,
+};
